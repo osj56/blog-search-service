@@ -1,0 +1,28 @@
+application:
+  properties:
+    kakao:
+      blog-search-url: https://dapi.kakao.com/v2/search/blog
+      api-auth-key: c1a67e080c8c81de9ae337250611c8f1
+    naver:
+      blog-search-url: https://openapi.naver.com/v1/search/blog.json
+      client-id: xi8quNo0YOQEQThUtytQ
+      client-secret-key: f39Q08fSpG
+spring:
+  datasource:
+    jdbc-url: jdbc:h2:mem:blog
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  redis:
+    port: 6379
