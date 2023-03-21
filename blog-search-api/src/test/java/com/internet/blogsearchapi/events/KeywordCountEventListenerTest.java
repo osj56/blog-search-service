@@ -23,10 +23,7 @@ public class KeywordCountEventListenerTest {
     @Test
     void given_event_when_invoked_then_handleKeywordCountEventSuccessfully(){
         KeywordCountEvent keywordCountEvent = createKeywordCountEvent(this, "테스트");
-
         keywordCountEventListener.handleKeywordCountEvent(keywordCountEvent);
-
-
         verify(keywordCountRepository).findByKeyword("테스트");
     }
 }
