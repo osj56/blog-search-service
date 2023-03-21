@@ -9,3 +9,6 @@
 ### API 명세서
 <img width="1493" alt="image" src="https://user-images.githubusercontent.com/29247638/226662102-b7c06533-234a-4a69-955d-a3c6e6ff196f.png">
 
+
+
+<img width="599" alt="image" src="https://user-images.githubusercontent.com/29247638/226665208-6429abbe-46bf-4d6c-90f1-f32ab71f5ef9.png">
