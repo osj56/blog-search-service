@@ -7,7 +7,7 @@
 #### java -jar blog-search-api-0.0.1-SNAPSHOT.jar
 
 ### API 명세서
-<img width="1493" alt="image" src="https://user-images.githubusercontent.com/29247638/226662102-b7c06533-234a-4a69-955d-a3c6e6ff196f.png">
+<img width="1438" alt="image" src="https://user-images.githubusercontent.com/29247638/226666216-3f9bdff4-d68f-413e-a75c-143c3fdd5889.png">
 
 
 
