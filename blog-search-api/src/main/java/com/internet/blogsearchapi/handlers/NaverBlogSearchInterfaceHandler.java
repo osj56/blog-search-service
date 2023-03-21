@@ -5,8 +5,7 @@ import com.internet.blogsearchapi.dtos.BlogSearchResponse;
 import com.internet.blogsearchapi.dtos.naver.NaverBlogSearchResponse;
 import com.internet.blogsearchapi.events.KeywordCountEventPublisher;
 import com.internet.blogsearchcommon.annotations.InterfaceHandler;
-import com.internet.blogsearchcommon.enums.CompanyName;
-import com.internet.blogsearchcommon.utils.UrlUtil;
+import com.internet.blogsearchcommon.enums.CompanyCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -16,9 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.UnsupportedEncodingException;
 
-@InterfaceHandler(CompanyName.NAVER)
+@InterfaceHandler(CompanyCode.NAVER)
 @RequiredArgsConstructor
 @Component
 public class NaverBlogSearchInterfaceHandler implements BlogSearchInterfaceHandler {
@@ -27,20 +25,20 @@ public class NaverBlogSearchInterfaceHandler implements BlogSearchInterfaceHandl
     final KeywordCountEventPublisher keywordCountEventPublisher;
 
     @Value("${application.properties.naver.blog-search-url}")
-    String blogSearchRequestApiUrl;
+    String naverBlogSearchUrl;
     @Value("${application.properties.naver.client-id}")
     String naverClientId;
     @Value("${application.properties.naver.client-secret-key}")
     String naverClientSecretKey;
 
     @Override
-    public BlogSearchResponse requestBlogSearchApi(CompanyName companyName, BlogSearchRequest blogSearchRequest) {
+    public BlogSearchResponse requestBlogSearchApi(CompanyCode companyCode, BlogSearchRequest blogSearchRequest) {
         try {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("X-Naver-Client-Id", naverClientId);
             httpHeaders.set("X-Naver-Client-Secret", naverClientSecretKey);
 
-            String uri = buildUri(blogSearchRequestApiUrl, blogSearchRequest);
+            String uri = buildUri(naverBlogSearchUrl, blogSearchRequest);
             HttpEntity<String> httpEntity = new HttpEntity<>("",httpHeaders);
             ResponseEntity<NaverBlogSearchResponse> naverBlogSearchResponseResponseEntity = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, NaverBlogSearchResponse.class);
 
@@ -48,36 +46,49 @@ public class NaverBlogSearchInterfaceHandler implements BlogSearchInterfaceHandl
 
             return buildBlogSearchResponse(naverBlogSearchResponseResponseEntity.getBody(), blogSearchRequest);
         }catch (Exception e){
-            throw new RuntimeException(e);
+            throw new RuntimeException(String.format("Failed requestNaverBlogSearchApi: %s", e.getMessage(), e));
         }
     }
 
-    private String buildUri(String url, BlogSearchRequest blogSearchRequest) throws UnsupportedEncodingException {
+    private String buildUri(String url, BlogSearchRequest blogSearchRequest) {
         StringBuilder queryString = new StringBuilder();
-        queryString.append("query=").append(UrlUtil.URLEncoder(blogSearchRequest.getQuery()));
+
+        queryString.append("query=").append(blogSearchRequest.getQuery());
 
         if(blogSearchRequest.getSort() != null){
-            queryString.append("&sort=").append(blogSearchRequest.getSort());
+            queryString.append("&sort=").append(convertNaverSortValue(blogSearchRequest.getSort()));
         }
 
-        if(blogSearchRequest.getStart() > 0){
-            queryString.append("&start=").append(blogSearchRequest.getStart());
+        if(blogSearchRequest.getPage() > 0){
+            queryString.append("&start=").append(blogSearchRequest.getPage());
         }
 
-        if(blogSearchRequest.getDisplay() > 10){
-            queryString.append("&display=").append(blogSearchRequest.getDisplay());
+        if(blogSearchRequest.getSize() > 10){
+            queryString.append("&display=").append(blogSearchRequest.getSize());
         }
         return url + "?" + queryString.toString();
     }
 
     private BlogSearchResponse buildBlogSearchResponse(NaverBlogSearchResponse naverBlogSearchResponse, BlogSearchRequest blogSearchRequest){
         return BlogSearchResponse.builder()
-                .companyName(CompanyName.NAVER)
+                .companyCode(CompanyCode.NAVER)
                 .totalCount(naverBlogSearchResponse.getTotal())
                 .currentPage(naverBlogSearchResponse.getStart())
-                .size(blogSearchRequest.getDisplay() > 10 ? blogSearchRequest.getDisplay() : 10)
-                .start(blogSearchRequest.getStart() > 0 ? blogSearchRequest.getStart() : 1)
+                .size(blogSearchRequest.getSize() > 10 ? blogSearchRequest.getSize() : 10)
+                .start(blogSearchRequest.getPage() > 0 ? blogSearchRequest.getPage() : 1)
                 .contents(naverBlogSearchResponse.getNaverBlogSearchItemResponseList())
                 .build();
+    }
+
+    private String convertNaverSortValue(String inputSort){
+        if(inputSort == null){
+            return null;
+        }
+
+        return switch (inputSort){
+            case "accuracy" -> "sim";
+            case "recency" -> "date";
+            default -> throw new IllegalStateException("Unexpected value: " + inputSort);
+        };
     }
 }

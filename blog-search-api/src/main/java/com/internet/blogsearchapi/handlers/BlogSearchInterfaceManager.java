@@ -3,7 +3,7 @@ package com.internet.blogsearchapi.handlers;
 import com.internet.blogsearchapi.dtos.BlogSearchRequest;
 import com.internet.blogsearchapi.dtos.BlogSearchResponse;
 import com.internet.blogsearchcommon.annotations.InterfaceHandler;
-import com.internet.blogsearchcommon.enums.CompanyName;
+import com.internet.blogsearchcommon.enums.CompanyCode;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +16,7 @@ import java.util.Map;
 @Component
 public class BlogSearchInterfaceManager {
     final ApplicationContext applicationContext;
-    private Map<CompanyName, BlogSearchInterfaceHandler> serviceInterfaceHandlerMap = new HashMap<>();
+    private Map<CompanyCode, BlogSearchInterfaceHandler> serviceInterfaceHandlerMap = new HashMap<>();
 
     @PostConstruct
     public void init(){
@@ -27,7 +27,7 @@ public class BlogSearchInterfaceManager {
         }
     }
 
-    public BlogSearchResponse requestBlogSearchApi(CompanyName companyName, BlogSearchRequest blogSearchRequest){
-        return serviceInterfaceHandlerMap.get(companyName).requestBlogSearchApi(companyName, blogSearchRequest);
+    public BlogSearchResponse requestBlogSearchApi(CompanyCode companyCode, BlogSearchRequest blogSearchRequest){
+        return serviceInterfaceHandlerMap.get(companyCode).requestBlogSearchApi(companyCode, blogSearchRequest);
     }
 }

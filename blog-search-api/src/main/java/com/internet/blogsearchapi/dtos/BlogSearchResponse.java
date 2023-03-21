@@ -1,6 +1,6 @@
 package com.internet.blogsearchapi.dtos;
 
-import com.internet.blogsearchcommon.enums.CompanyName;
+import com.internet.blogsearchcommon.enums.CompanyCode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BlogSearchResponse<T> {
-    CompanyName companyName;
+    CompanyCode companyCode;
     int totalCount;
     int currentPage;
     int size;

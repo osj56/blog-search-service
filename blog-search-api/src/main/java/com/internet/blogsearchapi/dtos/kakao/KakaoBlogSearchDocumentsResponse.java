@@ -3,8 +3,6 @@ package com.internet.blogsearchapi.dtos.kakao;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 public class KakaoBlogSearchDocumentsResponse {
@@ -13,5 +11,5 @@ public class KakaoBlogSearchDocumentsResponse {
     String url;
     String blogname;
     String thumbnail;
-    LocalDateTime dateTime;
+    String datetime;
 }

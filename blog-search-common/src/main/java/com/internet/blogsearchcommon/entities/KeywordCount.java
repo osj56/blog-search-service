@@ -12,7 +12,9 @@ public class KeywordCount extends BaseEntity{
     @Id
     @Column(name = "keyword_count_id")
     long id;
+
     String keyword;
+
     int count;
 
     public void increaseCount(){

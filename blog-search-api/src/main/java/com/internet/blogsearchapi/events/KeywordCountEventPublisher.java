@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KeywordCountEventPublisher {
     final ApplicationEventPublisher applicationEventPublisher;
+
     public void publishKeywordCountEvent(String keyword){
         KeywordCountEvent keywordCountEvent = new KeywordCountEvent(this, keyword);
         applicationEventPublisher.publishEvent(keywordCountEvent);
